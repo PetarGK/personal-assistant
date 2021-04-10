@@ -3,7 +3,7 @@ name: "Build & Deploy Backend"
 on:
   push:
     branches:
-      - prod
+      - main
 jobs:
   main:
     name: Build & Deploy
