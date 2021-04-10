@@ -22,4 +22,4 @@ jobs:
       - name: Install SLS plugins
         run: yarn install     
       - name: Deploy Backend    
-        run: ./node_modules/.bin/sls deploy -v
+        run: ./node_modules/.bin/sls deploy -v --stage AWS_STAGE
