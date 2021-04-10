@@ -1,15 +1,15 @@
-name: "Build & Deploy Backend"
+name: "Build & Deploy Test"
 
 on:
   push:
     branches:
-      - main
+      - test
 jobs:
   main:
     name: Build & Deploy
     runs-on: ubuntu-latest
     env:
-      AWS_STAGE: "prod"
+      AWS_STAGE: "test"
       AWS_REGION: "us-east-1"
       SLS_DEBUG: "*"    
     steps:

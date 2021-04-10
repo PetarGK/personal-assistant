@@ -1,0 +1,25 @@
+name: "Build & Deploy Prod"
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  main:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    env:
+      AWS_STAGE: "prod"
+      AWS_REGION: "us-east-1"
+      SLS_DEBUG: "*"    
+    steps:
+      - name: Setup Dynamic Variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{secrets[format('{0}_AWS_ACCESS_KEY_ID', env.AWS_STAGE)]}}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{secrets[format('{0}_AWS_SECRET_ACCESS_KEY', env.AWS_STAGE)]}}" >> $GITHUB_ENV  
+      - name: Source Code Checkout
+        uses: actions/checkout@v2
+      - name: Install SLS plugins
+        run: yarn install     
+      - name: Deploy Backend    
+        run: ./node_modules/.bin/sls deploy -v --stage ${{ env.AWS_STAGE }}
