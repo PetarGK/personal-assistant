@@ -23,3 +23,5 @@ jobs:
         run: yarn install     
       - name: Deploy Backend    
         run: ./node_modules/.bin/sls deploy -v
+
+
