@@ -8,7 +8,7 @@ jobs:
   main:
     name: Build & Deploy
     runs-on: ubuntu-latest
-      AWS_STAGE: ${{ 'stage' }}
+      AWS_STAGE: "stage"
       SLS_DEBUG: "*"
     steps:
       - name: Setup Dynamic Variables
