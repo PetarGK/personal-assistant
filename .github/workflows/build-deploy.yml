@@ -8,16 +8,15 @@ jobs:
   main:
     name: Build & Deploy
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_OUTPUT: json      
     steps:
       - name: Source Code Checkout
         uses: actions/checkout@v2
       - name: Install SLS plugins
-        run: npm ci
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1        
-      - name: Deploy Backend
+        run: npm ci       
+      - name: Deploy Backend    
         run: ./node_modules/.bin/sls deploy -v
