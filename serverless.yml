@@ -27,7 +27,7 @@ package:
 
 custom:
   region: ${opt:region, self:provider.region}
-  stage: ${opt:stage, self:provider.stage}
+  stage: ${${env:AWS_STAGE}, self:provider.stage}
   appSync:
     - ${file(serverless.appsync-api.yml)}  
 
