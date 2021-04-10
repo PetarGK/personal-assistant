@@ -16,6 +16,6 @@ jobs:
       - name: Source Code Checkout
         uses: actions/checkout@v2
       - name: Install SLS plugins
-        run: yarn install
+        run: npm ci
       - name: Deploy Backend
         run: ./node_modules/.bin/sls deploy -v
