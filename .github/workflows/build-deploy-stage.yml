@@ -8,8 +8,6 @@ jobs:
   main:
     name: Build & Deploy
     runs-on: ubuntu-latest
-    env:
-      SLS_DEBUG: "*"
     steps:
       - name: Setup Dynamic Variables
         run: |
