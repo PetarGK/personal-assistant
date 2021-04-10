@@ -1,0 +1,8 @@
+npmpackages:
+  path: layers
+  name: ${self:provider.stackName}-npm-layer
+  compatibleRuntimes:
+    - nodejs12.x
+  package:
+    include:
+      - nodejs/**

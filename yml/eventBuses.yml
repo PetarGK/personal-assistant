@@ -1,0 +1,5 @@
+Resources:
+  RemindersEventBridge:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: ${self:provider.stackName}-reminders-bus

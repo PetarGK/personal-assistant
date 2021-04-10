@@ -1,0 +1,45 @@
+service: personal-assistant
+frameworkVersion: '2'
+
+plugins:
+  - serverless-appsync-plugin
+  - serverless-iam-roles-per-function
+  - serverless-jetpack
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+  stage: dev
+  lambdaHashingVersion: 20201221
+  memorySize: 512
+  eventBridge:
+    useCloudFormation: true
+  stackName:  ${self:service}-${self:custom.stage}
+  environment:
+    STAGE: ${self:custom.stage}
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"  
+
+package:
+  individually: true
+  exclude:
+    - "**"
+
+custom:
+  region: ${opt:region, self:provider.region}
+  stage: ${opt:stage, self:provider.stage}
+  appSync:
+    - ${file(serverless.appsync-api.yml)}  
+
+layers: ${file(yml/layers.yml)}
+
+functions:
+  - ${file(yml/lambdas.yml)}
+
+resources:
+  - ${file(yml/tables.yml)}
+  - ${file(yml/auth.yml)}
+  - ${file(yml/eventBuses.yml)}
+  - ${file(yml/queues.yml)}
+  - ${file(yml/policies.yml)}
+  - ${file(yml/outputs.yml)}  

@@ -1,0 +1,36 @@
+{
+  "name": "personal-assistant",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "sls": "sls",
+    "test": "jest --verbose ./__tests__/test_cases/unit",
+    "integration-test": "jest --verbose ./__tests__/test_cases/integration --silent --detectOpenHandles",
+    "e2e-test": "jest --verbose ./__tests__/test_cases/e2e --silent"
+  },
+  "author": "Petar Korudzhiev",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "amplify-appsync-simulator": "^1.25.3",
+    "amplify-velocity-template": "^1.4.3",
+    "aws-sdk": "^2.852.0",
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.20.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3",
+    "jest-junit": "^12.0.0",
+    "lodash": "^4.17.21",
+    "prettier": "^2.2.1",
+    "serverless": "^2.29.0",
+    "serverless-appsync-plugin": "^1.8.0",
+    "serverless-iam-roles-per-function": "^3.1.0",
+    "serverless-jetpack": "^0.10.8"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,31 @@
+name: personal-assistant
+schema: schema.api.graphql
+authenticationType: AMAZON_COGNITO_USER_POOLS
+userPoolConfig:
+  awsRegion: us-east-1
+  defaultAction: ALLOW
+  userPoolId: !Ref CognitoUserPool
+mappingTemplatesLocation: mapping-templates
+mappingTemplates:
+  # - type: Query
+  #   field: getReminders
+  #   dataSource: usersTable   
+    
+  - type: Mutation
+    field: reminder
+    dataSource: reminderCreateFunction
+    request: false
+    response: false     
+
+  # NESTED FIELDS
+  
+
+dataSources:
+  - type: NONE
+    name: none    
+  - type: AWS_LAMBDA
+    name: reminderCreateFunction
+    config:
+      functionName: reminderCreate        
+
+substitutions:

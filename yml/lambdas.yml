@@ -1,0 +1,96 @@
+reminderCreate:
+  handler: functions/reminder-create.handler
+  name: ${self:provider.stackName}-reminder-create
+  package:
+    include:
+      - functions/reminder-create.js     
+  layers:
+    - !Ref NpmpackagesLambdaLayer    
+  environment:
+    REMINDERS_TABLE: !Ref RemindersTable
+  iamRoleStatementsName: ${self:provider.stackName}-reminder-create-role           
+  iamRoleStatements:
+    - Effect: Allow
+      Action: dynamodb:PutItem
+      Resource: !GetAtt RemindersTable.Arn  
+
+reminderDistribute:
+  handler: functions/reminder-distribute.handler
+  name: ${self:provider.stackName}-reminder-distribute
+  package:
+    include:
+      - functions/reminder-distribute.js
+  environment:
+    REMINDERS_EVENTBUS_NAME: !Ref RemindersEventBridge      
+  iamRoleStatementsName: ${self:provider.stackName}-reminder-distribute-role
+  iamRoleStatements:
+    - Action:
+        - dynamodb:DescribeStream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:ListStreams
+      Effect: Allow
+      Resource:
+        - !GetAtt [RemindersTable, StreamArn]
+    - Action:
+        - sqs:GetQueueUrl
+        - sqs:SendMessage
+      Effect: Allow
+      Resource:
+        - !GetAtt [RemindersDistributionDeadLetterQueue, Arn]    
+    - Action:
+        - events:PutEvents
+      Effect: Allow
+      Resource:
+        - !GetAtt [RemindersEventBridge, Arn]               
+  reservedConcurrency: 2
+  events:
+    - stream:
+        type: dynamodb
+        arn: !GetAtt [RemindersTable, StreamArn]
+        batchSize: 10
+        parallelizationFactor: 2
+        consumer: true
+        maximumRetryAttempts: 3
+        destinations:
+          onFailure:
+            arn: !GetAtt [RemindersDistributionDeadLetterQueue, Arn]
+            type: sqs        
+
+reminderSetup:
+  handler: functions/reminder-setup.handler
+  name: ${self:provider.stackName}-reminder-setup
+  package:
+    include:
+      - functions/reminder-setup.js      
+  layers:
+    - !Ref NpmpackagesLambdaLayer        
+  environment:
+    REMINDER_SEND_FUNCTION_ARN: !GetAtt ReminderSendLambdaFunction.Arn       
+  iamRoleStatementsName: ${self:provider.stackName}-reminder-setup-role       
+  iamRoleStatements: 
+    - Action:
+        - events:putRule
+        - events:putTargets
+      Effect: Allow
+      Resource: "*"                         
+  events:
+    - eventBridge:
+        eventBus: !Ref RemindersEventBridge
+        pattern:
+          source:
+            - reminder.created 
+
+reminderSend:
+  handler: functions/reminder-send.handler
+  name: ${self:provider.stackName}-reminder-send
+  package:
+    include:
+      - functions/reminder-send.js      
+  iamRoleStatementsName: ${self:provider.stackName}-reminder-send-role       
+  iamRoleStatements: 
+    - Action:
+        - events:deleteRule
+        - events:removeTargets
+      Effect: Allow
+      Resource: "*"                

@@ -1,0 +1,10 @@
+Resources:
+  ReminderSetupResourcePolicy:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName:
+        Fn::GetAtt: [ReminderSendLambdaFunction, Arn]
+      Action: 'lambda:invokeFunction'
+      Principal: 'events.amazonaws.com'
+      SourceArn:
+        Fn::Sub: 'arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/*'

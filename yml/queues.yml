@@ -1,0 +1,6 @@
+Resources:
+  RemindersDistributionDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:provider.stackName}-reminder-distribution-dlq
+      MaximumMessageSize: 24576
